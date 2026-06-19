@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>果了个果 🎂</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ========== 游戏容器 ========== -->
+  <div class="game-container">
+
+    <div class="header-row">
+      <h1 class="game-title">🍎 果了个果</h1>
+      <div class="level-badge" id="levelBadge">第 1 / 3 关</div>
+    </div>
+
+    <div class="collect-bar">
+      <span class="collect-label">收集：</span>
+      <div class="collect-slots">
+        <div class="collect-slot" id="collectSlot0"></div>
+        <div class="collect-slot" id="collectSlot1"></div>
+        <div class="collect-slot" id="collectSlot2"></div>
+      </div>
+    </div>
+
+    <div id="board" class="board"></div>
+
+    <div class="slot-area">
+      <div id="slotBar" class="slot-bar">
+        <div class="slot-placeholder"></div>
+        <div class="slot-placeholder"></div>
+        <div class="slot-placeholder"></div>
+        <div class="slot-placeholder"></div>
+        <div class="slot-placeholder"></div>
+        <div class="slot-placeholder"></div>
+        <div class="slot-placeholder"></div>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      剩余：<span id="remainCount">0</span> 张
+    </div>
+  </div>
+
+  <!-- ========== 通关惊喜遮罩层 ========== -->
+  <div id="winOverlay" class="win-overlay hidden">
+    <div class="win-content">
+
+      <div id="surpriseDigits" class="surprise-digits"></div>
+
+      <!-- 🎂 CSS 蛋糕 -->
+      <div id="surpriseCake" class="cake-scene hidden">
+        <!-- 底盘 -->
+        <div class="cake-plate"></div>
+        <!-- 蛋糕体 -->
+        <div class="cake-body">
+          <div class="cake-layer cake-layer-1">
+            <div class="cream-drip"></div>
+          </div>
+          <div class="cake-layer cake-layer-2">
+            <div class="cream-drip"></div>
+          </div>
+          <div class="cake-layer cake-layer-3">
+            <div class="cream-drip"></div>
+            <!-- 糖粒 -->
+            <div class="sprinkles">
+              <div class="sprinkle"></div><div class="sprinkle"></div>
+              <div class="sprinkle"></div><div class="sprinkle"></div>
+              <div class="sprinkle"></div><div class="sprinkle"></div>
+              <div class="sprinkle"></div><div class="sprinkle"></div>
+              <div class="sprinkle"></div><div class="sprinkle"></div>
+            </div>
+          </div>
+        </div>
+        <!-- 蜡烛 -->
+        <div class="candles" id="candles">
+          <div class="candle">
+            <div class="flame" id="flame0"><div class="flame-glow"></div></div>
+            <div class="wick"></div>
+          </div>
+          <div class="candle">
+            <div class="flame" id="flame1"><div class="flame-glow"></div></div>
+            <div class="wick"></div>
+          </div>
+          <div class="candle">
+            <div class="flame" id="flame2"><div class="flame-glow"></div></div>
+            <div class="wick"></div>
+          </div>
+          <div class="candle">
+            <div class="flame" id="flame3"><div class="flame-glow"></div></div>
+            <div class="wick"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 长按吹灭 -->
+      <button id="blowBtn" class="blow-btn hidden">
+        🔥 长按吹灭蜡烛
+      </button>
+
+      <div id="surpriseText" class="surprise-text hidden">
+        亲爱的姐姐，生日快乐！🎉<br>
+        <span class="sub-text">6月22日 · 永远开心</span>
+      </div>
+
+      <button id="replayBtn" class="replay-btn hidden">🔄 再玩一次</button>
+
+      <!-- 秘密空间 -->
+      <a id="secretLink" class="secret-btn hidden" href="#" target="_blank">
+        🎬 秘密空间
+      </a>
+    </div>
+  </div>
+
+  <!-- ========== 关卡过渡遮罩 ========== -->
+  <div id="levelOverlay" class="level-overlay hidden">
+    <div class="level-digit" id="levelDigit"></div>
+    <div class="level-hint" id="levelHint"></div>
+  </div>
+
+  <script src="js/audio.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/surprise.js"></script>
+</body>
+</html>
