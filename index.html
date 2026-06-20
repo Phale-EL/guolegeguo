@@ -52,9 +52,7 @@
 
       <!-- 🎂 CSS 蛋糕 -->
       <div id="surpriseCake" class="cake-scene hidden">
-        <!-- 底盘 -->
         <div class="cake-plate"></div>
-        <!-- 蛋糕体 -->
         <div class="cake-body">
           <div class="cake-layer cake-layer-1">
             <div class="cream-drip"></div>
@@ -64,7 +62,6 @@
           </div>
           <div class="cake-layer cake-layer-3">
             <div class="cream-drip"></div>
-            <!-- 糖粒 -->
             <div class="sprinkles">
               <div class="sprinkle"></div><div class="sprinkle"></div>
               <div class="sprinkle"></div><div class="sprinkle"></div>
@@ -74,7 +71,6 @@
             </div>
           </div>
         </div>
-        <!-- 蜡烛 -->
         <div class="candles" id="candles">
           <div class="candle">
             <div class="flame" id="flame0"><div class="flame-glow"></div></div>
@@ -95,7 +91,6 @@
         </div>
       </div>
 
-      <!-- 长按吹灭 -->
       <button id="blowBtn" class="blow-btn hidden">
         🔥 长按吹灭蜡烛
       </button>
@@ -108,10 +103,48 @@
       <button id="replayBtn" class="replay-btn hidden">🔄 再玩一次</button>
 
       <!-- 秘密空间 -->
-      <a id="secretLink" class="secret-btn hidden" href="#" target="_blank">
-        🎬 秘密空间
-      </a>
+      <button id="secretBtn" class="secret-btn hidden">🧧 秘密空间</button>
     </div>
+  </div>
+
+  <!-- ========== 红包弹窗 ========== -->
+  <div id="redpackOverlay" class="redpack-overlay hidden">
+    <div class="redpack-container">
+      <!-- 红包主体 -->
+      <div id="redpackEnvelope" class="redpack-envelope">
+        <div class="redpack-flap">
+          <div class="redpack-flap-inner">
+            <div class="redpack-gold-circle"></div>
+          </div>
+        </div>
+        <div class="redpack-body">
+          <div class="redpack-body-inner">
+            <div class="redpack-border-box">
+              <span class="redpack-char">開</span>
+            </div>
+          </div>
+        </div>
+        <div class="redpack-gold-stripe top-stripe"></div>
+        <div class="redpack-gold-stripe bottom-stripe"></div>
+      </div>
+
+      <!-- 点击提示 -->
+      <p id="redpackHint" class="redpack-hint">👆 点我拆红包</p>
+
+      <!-- 拆开后的内容 -->
+      <div id="redpackResult" class="redpack-result hidden">
+        <div class="result-amount">
+          <span class="amount-symbol">¥</span>
+          <span class="amount-number" id="amountNumber">188.88</span>
+        </div>
+        <p class="result-msg">姐姐生日快乐！<br>愿所有美好如期而至 💕</p>
+        <p class="result-hint">微信红包已发出，记得查收哦～</p>
+        <button id="redpackCloseBtn" class="redpack-close-btn">🎉 太开心啦</button>
+      </div>
+    </div>
+
+    <!-- 金币粒子容器 -->
+    <div id="coinContainer" class="coin-container"></div>
   </div>
 
   <!-- ========== 关卡过渡遮罩 ========== -->

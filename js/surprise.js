@@ -1,6 +1,6 @@
 ﻿/*
  *  surprise.js — 通关惊喜动画
- *  622 数字 → CSS蛋糕蜡烛 → 长按吹灭 → 🎆烟花彩带 → 祝福 + 秘密空间
+ *  622 数字 → CSS蛋糕蜡烛 → 长按吹灭 → 🎆烟花彩带 → 祝福 + 🧧红包秘密空间
  */
 
 'use strict';
@@ -13,9 +13,9 @@ var blowBtn   = null;
 var secretEl  = null;
 
 /* ================================================================
-   ⚠️ 在此处填写你的视频链接（本地路径或 URL）
+   🧧 红包配置
    ================================================================ */
-var SECRET_VIDEO_URL = 'audio/VID20260619231942.mp4';
+var REDPACK_AMOUNT = '62.2';   // 红包金额（可改成任意数字）
 
 // ========== 烟花彩带颜色 ==========
 var FIREWORK_COLORS = ['#FF4081','#FFD740','#40C4FF','#B2FF59','#FF6E40','#E040FB','#00E5FF','#FFAB40'];
@@ -101,7 +101,6 @@ function onBlowCancel() {
 
 /* 吹灭蜡烛 + 触发烟花彩带 */
 function onBlowDetected() {
-  /* 逐根熄灭蜡烛 */
   for (var i = 0; i < 4; i++) {
     (function (idx) {
       setTimeout(function () {
@@ -111,13 +110,11 @@ function onBlowDetected() {
     })(i);
   }
 
-  /* 🎆 烟花 + 🎊 彩带 */
   setTimeout(function () {
     spawnFireworks();
     spawnConfetti();
   }, 300);
 
-  /* 显示祝福 */
   setTimeout(function () {
     if (blowBtn) blowBtn.classList.add('hidden');
     if (textEl)  textEl.classList.remove('hidden');
@@ -125,20 +122,121 @@ function onBlowDetected() {
       replayEl.classList.remove('hidden');
       replayEl.addEventListener('click', onReplay);
     }
-    showSecretLink();
+    showSecretBtn();
   }, 1500);
 }
 
-/* 秘密空间链接 */
-function showSecretLink() {
+/* 显示"秘密空间"按钮 */
+function showSecretBtn() {
   if (!secretEl) return;
-  secretEl.href = SECRET_VIDEO_URL;
   secretEl.classList.remove('hidden');
+  secretEl.addEventListener('click', openRedpack);
+}
+
+// ========== 🧧 红包逻辑 ==========
+
+function openRedpack() {
+  var overlay = document.getElementById('redpackOverlay');
+  var envelope = document.getElementById('redpackEnvelope');
+  var hint = document.getElementById('redpackHint');
+  var result = document.getElementById('redpackResult');
+  var amountEl = document.getElementById('amountNumber');
+  var coinContainer = document.getElementById('coinContainer');
+
+  if (!overlay) return;
+
+  // 重置状态
+  if (envelope) {
+    envelope.classList.remove('opened');
+    envelope.style.opacity = '';
+    envelope.style.transform = '';
+    envelope.style.pointerEvents = '';
+  }
+  if (hint) hint.classList.remove('hidden');
+  if (result) result.classList.add('hidden');
+  if (coinContainer) coinContainer.innerHTML = '';
+
+  // 显示弹窗
+  overlay.classList.remove('hidden');
+
+  // 点击红包拆开
+  if (envelope) {
+    envelope.onclick = function () {
+      if (envelope.classList.contains('opened')) return;
+
+      // 播放音效
+      if (typeof playClick === 'function') playClick();
+
+      // 开红包动画
+      envelope.classList.add('opened');
+
+      // 隐藏提示
+      if (hint) hint.classList.add('hidden');
+
+      // 金币爆出
+      setTimeout(function () {
+        spawnCoins();
+      }, 200);
+
+      // 显示金额
+      setTimeout(function () {
+        if (amountEl) amountEl.textContent = REDPACK_AMOUNT;
+        if (result) result.classList.remove('hidden');
+        if (typeof playWinning === 'function') playWinning();
+        // 背景烟花
+        spawnFireworks();
+      }, 600);
+    };
+  }
+}
+
+/* 关闭红包 */
+function closeRedpack() {
+  var overlay = document.getElementById('redpackOverlay');
+  if (overlay) overlay.classList.add('hidden');
+}
+
+// ========== 🪙 金币粒子 ==========
+
+function spawnCoins() {
+  var container = document.getElementById('coinContainer');
+  if (!container) return;
+
+  var coins = ['🪙', '💰', '✨', '🧧', '💎', '🪙', '✨', '💰'];
+  var count = 30;
+
+  for (var i = 0; i < count; i++) {
+    var coin = document.createElement('span');
+    coin.className = 'gold-coin';
+    coin.textContent = coins[Math.floor(Math.random() * coins.length)];
+
+    // 从红包中心散射
+    var cx = (Math.random() - 0.5) * 300;
+    var cy = (Math.random() - 0.5) * 400 - 100;
+    var ex = cx + (Math.random() - 0.5) * 200;
+    var ey = cy - 100 - Math.random() * 300;
+    var rot = (Math.random() - 0.5) * 720;
+    var erot = rot + (Math.random() - 0.5) * 720;
+
+    coin.style.cssText =
+      '--cx:' + cx + 'px;' +
+      '--cy:' + cy + 'px;' +
+      '--ex:' + ex + 'px;' +
+      '--ey:' + ey + 'px;' +
+      '--rot:' + rot + 'deg;' +
+      '--erot:' + erot + 'deg;' +
+      'left:50%;top:50%;' +
+      'animation-delay:' + Math.random() * 0.3 + 's;' +
+      'animation-duration:' + (1 + Math.random() * 1.5) + 's;';
+
+    container.appendChild(coin);
+
+    setTimeout(function () { coin.remove(); }, 2000);
+  }
 }
 
 // ========== 🎆 烟花 ==========
 
-/* 单颗烟花粒子 */
 function createFireworkParticle(x, y, angle, color, speed, size, delay) {
   var el = document.createElement('div');
   el.className = 'firework-particle';
@@ -154,11 +252,9 @@ function createFireworkParticle(x, y, angle, color, speed, size, delay) {
     'left:' + x + 'px;' +
     'top:' + y + 'px;';
   document.body.appendChild(el);
-  /* 动画结束后移除 */
   setTimeout(function () { el.remove(); }, 1500 + delay * 1000);
 }
 
-/* 生成一发烟花 */
 function spawnFirework(x, y, startDelay) {
   var color = FIREWORK_COLORS[Math.floor(Math.random() * FIREWORK_COLORS.length)];
   var count = 30 + Math.floor(Math.random() * 20);
@@ -171,16 +267,13 @@ function spawnFirework(x, y, startDelay) {
   }
 }
 
-/* 多轮烟花 */
 function spawnFireworks() {
   var w = window.innerWidth;
   var h = window.innerHeight;
 
-  /* 3轮烟花，间隔 0.6s */
   for (var round = 0; round < 3; round++) {
     (function (r) {
       setTimeout(function () {
-        /* 每轮 3~5 发 */
         var bursts = 3 + Math.floor(Math.random() * 3);
         for (var b = 0; b < bursts; b++) {
           var fx = w * 0.15 + Math.random() * w * 0.7;
@@ -218,7 +311,6 @@ function createConfetti() {
 }
 
 function spawnConfetti() {
-  /* 3 波彩带，每波 50 片 */
   for (var wave = 0; wave < 3; wave++) {
     setTimeout(function () {
       for (var i = 0; i < 50; i++) {
@@ -245,7 +337,7 @@ function onReplay() {
   if (blowPressTimer) { clearTimeout(blowPressTimer); blowPressTimer = null; }
   if (textEl)   textEl.classList.add('hidden');
   if (replayEl) { replayEl.classList.add('hidden'); replayEl.removeEventListener('click', onReplay); }
-  if (secretEl) secretEl.classList.add('hidden');
+  if (secretEl) { secretEl.classList.add('hidden'); secretEl.removeEventListener('click', openRedpack); }
   if (typeof resetGame === 'function') resetGame();
 }
 
@@ -256,7 +348,7 @@ function triggerSurprise(digits) {
   textEl   = document.getElementById('surpriseText');
   replayEl = document.getElementById('replayBtn');
   blowBtn  = document.getElementById('blowBtn');
-  secretEl = document.getElementById('secretLink');
+  secretEl = document.getElementById('secretBtn');
 
   if (typeof playFinalWin === 'function') playFinalWin();
 
@@ -265,4 +357,32 @@ function triggerSurprise(digits) {
   });
 }
 
+// ========== 红包关闭按钮 ==========
+(function initRedpackClose() {
+  // 等 DOM 加载完绑定
+  function bindClose() {
+    var closeBtn = document.getElementById('redpackCloseBtn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        closeRedpack();
+      });
+    }
+
+    // 点击遮罩背景关闭
+    var overlay = document.getElementById('redpackOverlay');
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeRedpack();
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindClose);
+  } else {
+    bindClose();
+  }
+})();
+
 window.triggerSurprise = triggerSurprise;
+
