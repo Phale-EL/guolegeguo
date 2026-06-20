@@ -369,6 +369,7 @@ function onBoardClick(e) {
   if (!card || card.blocked) return;
 
   if (typeof playClick === 'function') playClick();
+  if (typeof navigator.vibrate === 'function') navigator.vibrate(15);
 
   card.removed = true;
   refreshBlockedState();
